@@ -145,55 +145,62 @@ export default function FieldDashboard() {
                 </Link>
               </header>
               <div className="p-4">
-                <Await resolve={focusedSection}>
-                  {(section) => (
-                    <>
-                      <p>{section.name}</p>
-                      <button>Test</button>
-                    </>
-                  )}
-                </Await>
+                <React.Suspense>
+                  <Await resolve={focusedSection}>
+                    {(section) => (
+                      <>
+                        <p>{section.name}</p>
+                        <button>Test</button>
+                      </>
+                    )}
+                  </Await>
+                </React.Suspense>
               </div>
             </main>
             {loaderData.sections.length > 1 && (
               <aside className="flex flex-col">
                 <ul className="flex-1 flex flex-row">
-                  <React.SuspenseList revealOrder="together">
-                    {loaderData.sections.slice(1).map((section) => (
-                      <React.Suspense key={section.id}>
-                        <Await resolve={sectionData[section.id]}>
-                          {(sectionData) =>
-                            !sectionData ? null : (
-                              <li className="flex flex-1">
-                                <Link
-                                  to={section.to}
-                                  className="vtbl flex-1 flex justify-center border-l hover:bg-gray-50 focus:bg-gray-50"
-                                >
-                                  <span>
-                                    <span className="text-sm">
-                                      {section.type}{" "}
-                                    </span>
-                                    {sectionData.name}
+                  {loaderData.sections.slice(1).map((section) => (
+                    <React.Suspense
+                      key={section.id}
+                      fallback={
+                        <li className="flex flex-1 border-l">
+                          <Link
+                            to={section.to}
+                            className="vtbl flex-1 flex justify-center hover:bg-gray-50 focus:bg-gray-50"
+                          >
+                            <span>&nbsp;</span>
+                          </Link>
+                        </li>
+                      }
+                    >
+                      <Await resolve={sectionData[section.id]}>
+                        {(sectionData) =>
+                          !sectionData ? null : (
+                            <li className="flex flex-1 border-l">
+                              <Link
+                                to={section.to}
+                                className="vtbl flex-1 flex justify-center hover:bg-gray-50 focus:bg-gray-50"
+                              >
+                                <span>
+                                  <span className="text-sm">
+                                    {section.type}{" "}
                                   </span>
-                                </Link>
-                              </li>
-                            )
-                          }
-                        </Await>
-                      </React.Suspense>
-                    ))}
-                  </React.SuspenseList>
+                                  {sectionData.name}
+                                </span>
+                              </Link>
+                            </li>
+                          )
+                        }
+                      </Await>
+                    </React.Suspense>
+                  ))}
                 </ul>
               </aside>
             )}
           </div>
         </div>
       </dialog>
-      <script
-        dangerouslySetInnerHTML={{
-          __html: `(()=>{let d=document.getElementById("model-detail-dialog");d.close("focus");d.showModal();})()`,
-        }}
-      />
     </>
   );
 }

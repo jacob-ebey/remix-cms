@@ -62,8 +62,6 @@ export async function getFieldsForModel({
   modelId: string;
   userId: string;
 }) {
-  await new Promise((resolve) => setTimeout(resolve, 1000));
-
   const model = await prisma.model.findFirst({
     where: {
       id: modelId,
@@ -114,8 +112,6 @@ export async function getModelsForProject({
   projectId: string;
   userId: string;
 }) {
-  // TODO: Remove this artificial delay
-  await new Promise((resolve) => setTimeout(resolve, 500));
   const models = await prisma.model.findMany({
     where: {
       project: {
@@ -186,9 +182,6 @@ export async function countModels({
   userId: string;
   projectId: string;
 }): Promise<number> {
-  // TODO: Remove this artificial delay
-  await new Promise((resolve) => setTimeout(resolve, 300));
-
   const project = await prisma.project.findFirst({
     where: {
       id: projectId,

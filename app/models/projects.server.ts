@@ -47,8 +47,6 @@ export async function projectExists({
 }
 
 export async function getProjects({ userId }: { userId: string }) {
-  await new Promise((resolve) => setTimeout(resolve, 500));
-
   const projects = await prisma.project.findMany({
     where: {
       users: {
