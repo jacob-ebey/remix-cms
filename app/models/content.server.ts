@@ -5,6 +5,6 @@ export async function countContent({
   userId: string;
   projectId: string;
 }): Promise<number> {
-  await new Promise((resolve) => setTimeout(resolve, 1000));
+  await new Promise((resolve) => setTimeout(resolve, 200));
   return 0;
 }

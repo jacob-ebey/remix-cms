@@ -9,3 +9,8 @@
 .hide-inverse .hideable-inverse {
   display: none;
 }
+
+.vtbl {
+  writing-mode: vertical-rl;
+  text-orientation: mixed;
+}

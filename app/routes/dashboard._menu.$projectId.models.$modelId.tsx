@@ -2,7 +2,13 @@ import * as React from "react";
 import type { LoaderArgs } from "@remix-run/node";
 import { defer, json } from "@remix-run/node";
 import type { ShouldReloadFunction } from "@remix-run/react";
-import { Await, Link, Outlet, useLoaderData } from "@remix-run/react";
+import {
+  Await,
+  Link,
+  Outlet,
+  useLoaderData,
+  useLocation,
+} from "@remix-run/react";
 import { Form } from "remix-forms";
 import { z } from "zod";
 import clsx from "clsx";
@@ -47,6 +53,20 @@ export const unstable_shouldReload: ShouldReloadFunction = ({
 
 export default function DashboardTest() {
   const { model, fields } = useLoaderData<typeof loader>();
+  const location = useLocation();
+
+  const backToFieldId = React.useMemo(() => {
+    const { fieldId } = ((typeof location.state === "object"
+      ? location.state
+      : {}) || {}) as { fieldId?: string };
+    return fieldId;
+  }, [location]);
+  const backToFieldLinkRef = React.useRef<HTMLAnchorElement>(null);
+  React.useEffect(() => {
+    if (backToFieldLinkRef.current) {
+      backToFieldLinkRef.current.focus();
+    }
+  }, [backToFieldId, backToFieldLinkRef]);
 
   return (
     <DashboardDetailLayout>
@@ -148,6 +168,9 @@ export default function DashboardTest() {
                         )}
                         title={name}
                         to={`field/${id}`}
+                        ref={
+                          id === backToFieldId ? backToFieldLinkRef : undefined
+                        }
                       >
                         <section className="px-2.5 py-2.5 text-sm">
                           <div className="text-xs pb-1.5 flex flex-row gap-4">
@@ -155,12 +178,12 @@ export default function DashboardTest() {
                           </div>
 
                           <h2 className="break-words line-clamp-2">{name}</h2>
-                          {typeReferenceName && (
-                            <p className="line-clamp-1 break-all">
-                              {typeReferenceName || type}
-                              {array && "[]"}
-                            </p>
-                          )}
+
+                          <p className="line-clamp-1 break-all">
+                            {array && "Array<"}
+                            {typeReferenceName || type}
+                            {array && ">"}
+                          </p>
                         </section>
                       </Link>
                     </li>

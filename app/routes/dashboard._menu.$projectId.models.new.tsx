@@ -6,6 +6,7 @@ import { InputError, InputErrors, makeDomainFunction } from "remix-domains";
 import { Form, formAction } from "remix-forms";
 import { useFieldArray } from "react-hook-form";
 import { z } from "zod";
+import { zfd } from "zod-form-data";
 import clsx from "clsx";
 
 import * as appConfig from "~/app.config";
@@ -145,7 +146,6 @@ function FieldsForm({
                     <input
                       {...register(`fields[${index}][array]`)}
                       type="checkbox"
-                      autoComplete="off"
                       className="mr-2.5"
                       {...(getError(actionData, ["fields", index, "array"])
                         ? {
@@ -176,7 +176,6 @@ function FieldsForm({
                     <input
                       {...register(`fields[${index}][required]`)}
                       type="checkbox"
-                      autoComplete="off"
                       className="mr-2.5"
                       {...(getError(actionData, ["fields", index, "required"])
                         ? {
@@ -235,7 +234,7 @@ export default function DashboardTest() {
                   <>
                     <Label className="block" />
                     <input
-                      {...register("slug")}
+                      {...register("slug", { minLength: 1 })}
                       autoComplete="off"
                       autoCapitalize="off"
                       className="px-2.5 py-2 w-full border"
@@ -266,8 +265,8 @@ const fieldsSchema = z
       type: z.enum<appConfig.DataTypes, typeof appConfig.dataTypes>(
         appConfig.dataTypes
       ),
-      array: z.preprocess((v) => v !== "on", z.boolean()),
-      required: z.preprocess((v) => v !== "on", z.boolean()),
+      array: zfd.checkbox({ trueValue: "" }),
+      required: zfd.checkbox({ trueValue: "" }),
     })
   )
   .optional();

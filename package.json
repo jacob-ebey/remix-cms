@@ -24,7 +24,8 @@
     "react-hook-form": "^7.34.2",
     "remix-domains": "^0.3.2",
     "remix-forms": "^0.17.4-test.0",
-    "zod": "^3.18.0"
+    "zod": "^3.18.0",
+    "zod-form-data": "^1.2.1"
   },
   "devDependencies": {
     "@remix-run/dev": "0.0.0-experimental-46aae87fd",

@@ -187,7 +187,7 @@ export async function countModels({
   projectId: string;
 }): Promise<number> {
   // TODO: Remove this artificial delay
-  await new Promise((resolve) => setTimeout(resolve, 500));
+  await new Promise((resolve) => setTimeout(resolve, 300));
 
   const project = await prisma.project.findFirst({
     where: {
