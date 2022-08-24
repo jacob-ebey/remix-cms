@@ -1,0 +1,47 @@
+{
+  "private": true,
+  "sideEffects": false,
+  "scripts": {
+    "build:css": "tailwindcss -i styles.css -o app/_generated/styles.css",
+    "build:remix": "remix build",
+    "build": "npm run build:css && npm run build:remix",
+    "dev:css": "tailwindcss -i styles.css -o app/_generated/styles.css --watch",
+    "dev:remix": "remix dev",
+    "dev": "npm run build:css && concurrently \"npm:dev:*\"",
+    "start": "remix-serve build",
+    "generate:sprites": "tsx scripts/sprites.ts"
+  },
+  "dependencies": {
+    "@prisma/client": "^4.2.1",
+    "@remix-run/node": "0.0.0-experimental-46aae87fd",
+    "@remix-run/react": "0.0.0-experimental-46aae87fd",
+    "@remix-run/serve": "0.0.0-experimental-46aae87fd",
+    "a11y-dialog": "^7.5.2",
+    "bcrypt": "^5.0.1",
+    "clsx": "^1.2.1",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-hook-form": "^7.34.2",
+    "remix-domains": "^0.3.2",
+    "remix-forms": "^0.17.4-test.0",
+    "zod": "^3.18.0"
+  },
+  "devDependencies": {
+    "@remix-run/dev": "0.0.0-experimental-46aae87fd",
+    "@remix-run/eslint-config": "0.0.0-experimental-46aae87fd",
+    "@types/bcrypt": "^5.0.0",
+    "@types/react": "^18.0.15",
+    "@types/react-dom": "^18.0.6",
+    "concurrently": "^7.3.0",
+    "eslint": "^8.20.0",
+    "prisma": "^4.2.1",
+    "remix-flat-routes": "^0.4.3",
+    "svgstore": "^3.0.1",
+    "tailwindcss": "^3.1.8",
+    "tsx": "^3.8.2",
+    "typescript": "^4.7.4"
+  },
+  "engines": {
+    "node": ">=14"
+  }
+}

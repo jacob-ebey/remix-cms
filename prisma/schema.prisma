@@ -1,0 +1,59 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id             String    @id @default(cuid())
+  username       String    @unique
+  hashedPassword String
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+  projects       Project[]
+}
+
+model Project {
+  id          String   @id @default(cuid())
+  name        String
+  description String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  models      Model[]
+  users       User[]
+}
+
+model Model {
+  id             String       @id @default(cuid())
+  slug           String
+  name           String
+  description    String?
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+  fields         ModelField[] @relation("MODEL_FIELDS_REFERENCE")
+  typeReferences ModelField[] @relation("MODEL_TYPE_REFERENCE")
+  project        Project?     @relation(fields: [projectId], references: [id])
+  projectId      String?
+
+  @@unique([projectId, slug])
+}
+
+model ModelField {
+  id              String   @id @default(cuid())
+  name            String
+  type            String
+  array           Boolean
+  required        Boolean
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  typeReference   Model?   @relation("MODEL_TYPE_REFERENCE", fields: [typeReferenceId], references: [id])
+  typeReferenceId String?
+  model           Model?   @relation("MODEL_FIELDS_REFERENCE", fields: [modelId], references: [id])
+  modelId         String?
+}

@@ -1,0 +1,11 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.hide .hideable {
+  display: none;
+}
+
+.hide-inverse .hideable-inverse {
+  display: none;
+}
