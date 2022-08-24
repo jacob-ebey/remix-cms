@@ -112,73 +112,88 @@ export default function FieldDashboard() {
   const focusedSection = sectionData[loaderData.sections[0].id];
 
   return (
-    <dialog
-      ref={dialogRef}
-      open
-      className="z-30 m-0 p-0 fixed w-fit h-fit flex bg-transparent"
-      onClick={(e) => {
-        e.stopPropagation();
-      }}
-      onClose={(e) => {
-        if (e.currentTarget.returnValue !== "focus") {
-          navigate("..", { state: { fieldId: returnToFieldId } });
-        } else {
-          e.currentTarget.returnValue = "";
-        }
-      }}
-    >
-      <div className="fixed w-screen h-screen flex-1 flex items-center justify-center bg-[rgba(0,0,0,0.2)]">
-        <div className="w-full h-full lg:h-[90%] lg:w-[90%] border z-50 flex bg-white">
-          <main className="flex-1">
-            <header className="flex p-4">
-              <Link
-                to=".."
-                state={{ fieldId: returnToFieldId }}
-                className="flex items-center justify-center w-8 h-8 rounded-full hover:bg-gray-100 focus:bg-gray-100"
-              >
-                <svg aria-hidden="true" role="img" className="w-4 h-4">
-                  <use href={`${spritesHref}#close`} />
-                </svg>
-              </Link>
-            </header>
-            <div className="p-4">
-              <Await resolve={focusedSection}>
-                {(section) => (
-                  <>
-                    <p>{section.name}</p>
-                    <button>Test</button>
-                  </>
-                )}
-              </Await>
-            </div>
-          </main>
-          {loaderData.sections.length > 1 && (
-            <aside className="flex flex-col">
-              <ul className="flex-1 flex flex-row">
-                {loaderData.sections.slice(1).map((section, index) => (
-                  <Await key={section.id} resolve={sectionData[section.id]}>
-                    {(sectionData) =>
-                      !sectionData ? null : (
-                        <li className="flex flex-1">
-                          <Link
-                            to={section.to}
-                            className="vtbl flex-1 flex justify-center border-l hover:bg-gray-50 focus:bg-gray-50"
-                          >
-                            <span>
-                              <span className="text-sm">{section.type} </span>
-                              {sectionData.name}
-                            </span>
-                          </Link>
-                        </li>
-                      )
-                    }
-                  </Await>
-                ))}
-              </ul>
-            </aside>
-          )}
+    <>
+      <dialog
+        open
+        id="model-detail-dialog"
+        aria-modal="true"
+        ref={dialogRef}
+        className="z-30 m-0 p-0 fixed w-fit h-fit flex bg-transparent"
+        onClick={(e) => {
+          e.stopPropagation();
+        }}
+        onClose={(e) => {
+          if (e.currentTarget.returnValue !== "focus") {
+            navigate("..", { state: { fieldId: returnToFieldId } });
+          } else {
+            e.currentTarget.returnValue = "";
+          }
+        }}
+      >
+        <div className="fixed w-screen h-screen flex-1 flex items-center justify-center bg-[rgba(0,0,0,0.2)]">
+          <div className="w-full h-full lg:h-[90%] lg:w-[90%] border z-50 flex bg-white">
+            <main className="flex-1">
+              <header className="flex p-4">
+                <Link
+                  to=".."
+                  state={{ fieldId: returnToFieldId }}
+                  className="flex items-center justify-center w-8 h-8 rounded-full hover:bg-gray-100 focus:bg-gray-100"
+                >
+                  <svg aria-hidden="true" role="img" className="w-4 h-4">
+                    <use href={`${spritesHref}#close`} />
+                  </svg>
+                </Link>
+              </header>
+              <div className="p-4">
+                <Await resolve={focusedSection}>
+                  {(section) => (
+                    <>
+                      <p>{section.name}</p>
+                      <button>Test</button>
+                    </>
+                  )}
+                </Await>
+              </div>
+            </main>
+            {loaderData.sections.length > 1 && (
+              <aside className="flex flex-col">
+                <ul className="flex-1 flex flex-row">
+                  <React.SuspenseList revealOrder="together">
+                    {loaderData.sections.slice(1).map((section) => (
+                      <React.Suspense key={section.id}>
+                        <Await resolve={sectionData[section.id]}>
+                          {(sectionData) =>
+                            !sectionData ? null : (
+                              <li className="flex flex-1">
+                                <Link
+                                  to={section.to}
+                                  className="vtbl flex-1 flex justify-center border-l hover:bg-gray-50 focus:bg-gray-50"
+                                >
+                                  <span>
+                                    <span className="text-sm">
+                                      {section.type}{" "}
+                                    </span>
+                                    {sectionData.name}
+                                  </span>
+                                </Link>
+                              </li>
+                            )
+                          }
+                        </Await>
+                      </React.Suspense>
+                    ))}
+                  </React.SuspenseList>
+                </ul>
+              </aside>
+            )}
+          </div>
         </div>
-      </div>
-    </dialog>
+      </dialog>
+      <script
+        dangerouslySetInnerHTML={{
+          __html: `(()=>{let d=document.getElementById("model-detail-dialog");d.close("focus");d.showModal();})()`,
+        }}
+      />
+    </>
   );
 }
